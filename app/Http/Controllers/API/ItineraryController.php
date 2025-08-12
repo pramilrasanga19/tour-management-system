@@ -122,15 +122,16 @@ class ItineraryController extends Controller
         return response()->json($itinerary);
     }
 
-    public function destroy(Itinerary $itinerary)
-    {
-       
-        if (request()->user()->isAgent() && $itinerary->enquiry->assigned_to !== request()->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        public function destroy(Itinerary $itinerary)
+        {
+            if (request()->user()->isAgent() && $itinerary->enquiry->assigned_to !== request()->user()->id) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            $itinerary->delete();
+
+            return response()->json([
+                'message' => 'Itinerary deleted successfully'
+            ], 200);
         }
-
-        $itinerary->delete();
-
-        return response()->json(null, 204);
-    }
 }
